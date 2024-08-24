@@ -23,13 +23,13 @@ public class SupplierService {
             throw new IllegalArgumentException("Location cannot be null or empty");
         }
     	if (natureOfBusinessStr == null || natureOfBusinessStr.isEmpty()) {
-            throw new IllegalArgumentException("natureOfBusinessStr cannot be null or empty");
+            throw new IllegalArgumentException("Nature of business cannot be null or empty");
         }
     	if (processes == null || processes.isEmpty()) {
             throw new IllegalArgumentException("Processes cannot be null or empty");
         }
       	if (pageable == null) {
-            throw new IllegalArgumentException("pageable cannot be null or empty");
+            throw new IllegalArgumentException("Pageable cannot be null or empty");
         }
 
        

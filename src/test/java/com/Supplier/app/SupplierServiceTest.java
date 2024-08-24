@@ -70,5 +70,65 @@ public class SupplierServiceTest {
 //        verify(supplierRepository).findByLocationAndNatureOfBusinessAndManufacturingProcessesIn(
 //                location, natureOfBusiness, processes, pageable);
     }
+    
+    
+    @Test
+    void searchSuppliers_NullLocation_ShouldThrowException() {
+        // Given
+        String location = null;
+        String natureOfBusinessStr = "MEDIUM_SCALE";
+        Set<String> processes = new HashSet<>();
+        processes.add("COATING");
+        Pageable pageable = Pageable.unpaged();
+
+        // When & Then
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+                supplierService.searchSuppliers(location, natureOfBusinessStr, processes, pageable));
+        assertEquals("Location cannot be null or empty", thrown.getMessage());
+    }
+
+    @Test
+    void searchSuppliers_EmptyNatureOfBusiness_ShouldThrowException() {
+        // Given
+        String location = "Los Angeles";
+        String natureOfBusinessStr = "";
+        Set<String> processes = new HashSet<>();
+        processes.add("COATING");
+        Pageable pageable = Pageable.unpaged();
+
+        // When & Then
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+                supplierService.searchSuppliers(location, natureOfBusinessStr, processes, pageable));
+        assertEquals("Nature of business cannot be null or empty", thrown.getMessage());
+    }
+
+    @Test
+    void searchSuppliers_NullProcesses_ShouldThrowException() {
+        // Given
+        String location = "Los Angeles";
+        String natureOfBusinessStr = "MEDIUM_SCALE";
+        Set<String> processes = null;
+        Pageable pageable = Pageable.unpaged();
+
+        // When & Then
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+                supplierService.searchSuppliers(location, natureOfBusinessStr, processes, pageable));
+        assertEquals("Processes cannot be null or empty", thrown.getMessage());
+    }
+
+    @Test
+    void searchSuppliers_NullPageable_ShouldThrowException() {
+        // Given
+        String location = "Los Angeles";
+        String natureOfBusinessStr = "MEDIUM_SCALE";
+        Set<String> processes = new HashSet<>();
+        processes.add("COATING");
+        Pageable pageable = null;
+
+        // When & Then
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+                supplierService.searchSuppliers(location, natureOfBusinessStr, processes, pageable));
+        assertEquals("Pageable cannot be null or empty", thrown.getMessage());
+    }
 
 }

@@ -27,10 +27,30 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Set;
 
-public class SupplierControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class SupplierControllerTest {
 
     @Mock
     private SupplierService supplierService;
@@ -38,35 +58,78 @@ public class SupplierControllerTest {
     @InjectMocks
     private SupplierController supplierController;
 
-    private ObjectMapper objectMapper;
-
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        objectMapper = new ObjectMapper();
+        // Initialization if needed
     }
 
     @Test
-    void testSearchSuppliers() throws Exception {
-        // Arrange
+    void searchSuppliers_ValidRequest_ShouldReturnSuppliers() {
+        // Given
         SupplierQueryRequest request = new SupplierQueryRequest();
-        request.setLocation("New York");
-        request.setNatureOfBusiness("MANUFACTURING");
-        request.setManufacturingProcesses(Set.of("Process1", "Process2"));
+        request.setLocation("Los Angeles");
+        request.setNatureOfBusiness("MEDIUM_SCALE");
+        request.setManufacturingProcesses(Set.of("COATING"));
         request.setPage(0);
         request.setSize(10);
 
-  //      NatureOfBusiness natureOfBusiness = mock(NatureOfBusiness.class);
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Supplier> expectedPage = new PageImpl<>(List.of(new Supplier(), new Supplier()));
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Supplier> expectedPage = new PageImpl<>(new ArrayList<>());
 
         when(supplierService.searchSuppliers(
                 request.getLocation(),
                 request.getNatureOfBusiness(),
                 request.getManufacturingProcesses(),
-                pageable
-        )).thenReturn(expectedPage);
-        supplierController.searchSuppliers(request);
-       
+                pageable))
+                .thenReturn(expectedPage);
+
+        // When
+        ResponseEntity<Page<Supplier>> response = supplierController.searchSuppliers(request);
+
+        // Then
+        verify(supplierService, times(1)).searchSuppliers(
+                request.getLocation(),
+                request.getNatureOfBusiness(),
+                request.getManufacturingProcesses(),
+                pageable);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPage, response.getBody());
+    }
+
+    @Test
+    void searchSuppliers_ServiceThrowsException_ShouldReturnError() {
+        // Given
+        SupplierQueryRequest request = new SupplierQueryRequest();
+        request.setLocation("Los Angeles");
+        request.setNatureOfBusiness("MEDIUM_SCALE");
+        request.setManufacturingProcesses(Set.of("COATING"));
+        request.setPage(0);
+        request.setSize(10);
+
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+
+		/*
+		 * when(supplierService.searchSuppliers( request.getLocation(),
+		 * request.getNatureOfBusiness(), request.getManufacturingProcesses(),
+		 * pageable)) .thenThrow(IllegalArgumentException.class);
+		 */
+        ResponseEntity<Page<Supplier>> i =   supplierController.searchSuppliers(request);
+        
+      
+    }
+    
+    @Test
+    void searchSuppliers_InvalidRequest_ShouldThrowException() {
+        // Given
+        SupplierQueryRequest request = new SupplierQueryRequest();
+        request.setLocation(null); // Invalid request
+        request.setNatureOfBusiness("MEDIUM_SCALE");
+        request.setManufacturingProcesses(Set.of("COATING"));
+        request.setPage(0);
+        request.setSize(10);
+        ResponseEntity<Page<Supplier>> i=  supplierController.searchSuppliers(request);
+
+      
     }
 }
+

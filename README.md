@@ -10,7 +10,7 @@ This project is a Spring Boot REST API that allows buyers to search for manufact
 #### Steps to Run Locally
 git clone [Repository URL]
 cd [Project Directory]
-After setting up the project locally, update the database connection properties to match your local database.
+After setting up the project locally, update the database connection in application.properties file to match your local database.
 Additionally, insert data into the database using the SQL query provided in the zip file.
 
 # Build the Application

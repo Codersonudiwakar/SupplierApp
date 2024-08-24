@@ -6,7 +6,13 @@ This project is a Spring Boot REST API that allows buyers to search for manufact
 - spring 3.3.3
 - mySql 8.0.28
 - Maven 3.6+
-## How to Run the Application
+# How to Run the Application
+#### Steps to Run Locally
+git clone [Repository URL]
+cd [Project Directory]
+After setting up the project locally, update the database connection properties to match your local database.
+Additionally, insert data into the database using the SQL query provided in the zip file.
+
 # Build the Application
 mvn clean install
 ## Example cURL Commands

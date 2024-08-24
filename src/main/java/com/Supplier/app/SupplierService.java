@@ -19,6 +19,20 @@ public class SupplierService {
 
     public Page<Supplier> searchSuppliers(String location, String natureOfBusinessStr,
             Set<String> processes, Pageable pageable) {
+    	if (location == null || location.isEmpty()) {
+            throw new IllegalArgumentException("Location cannot be null or empty");
+        }
+    	if (natureOfBusinessStr == null || natureOfBusinessStr.isEmpty()) {
+            throw new IllegalArgumentException("natureOfBusinessStr cannot be null or empty");
+        }
+    	if (processes == null || processes.isEmpty()) {
+            throw new IllegalArgumentException("Processes cannot be null or empty");
+        }
+      	if (pageable == null) {
+            throw new IllegalArgumentException("pageable cannot be null or empty");
+        }
+
+       
         NatureOfBusiness natureOfBusiness = NatureOfBusiness.valueOf(natureOfBusinessStr.toUpperCase());
 
 return supplierRepository.findByLocationAndNatureOfBusinessAndManufacturingProcessesIn(

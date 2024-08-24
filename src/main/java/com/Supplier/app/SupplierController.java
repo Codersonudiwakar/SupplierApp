@@ -31,7 +31,7 @@ public class SupplierController {
             request.getManufacturingProcesses(),
             pageable
         );
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok(result);
     }
 }
 
